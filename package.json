@@ -38,6 +38,9 @@
     "check": "npm run typecheck && npm test",
     "prepublishOnly": "npm run check"
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "engines": {
     "node": ">=24"
   },
