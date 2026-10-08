@@ -108,7 +108,8 @@ export default function loopCompact(pi: ExtensionAPI): void {
   pi.on("context", (event, ctx) => {
     if (!settings.enabled || phase !== "idle" || !ctx.model || !endsWithToolBatch(event.messages)) return;
     const usage = ctx.getContextUsage();
-    if (!usage || usage.tokens === null || usage.percent === null || usage.percent < settings.threshold) return;
+    // Only a known usage at or above the threshold triggers; null, NaN or missing usage never does.
+    if (!usage || usage.tokens === null || !(usage.percent !== null && usage.percent >= settings.threshold)) return;
 
     const session = sessionId(ctx);
     const plan = planSessionCut(ctx, (usage.contextWindow * settings.threshold) / 100);

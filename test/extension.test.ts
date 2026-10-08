@@ -134,6 +134,8 @@ test("unknown or low usage and incomplete batches do not trigger", () => {
     h.batch();
     h.state.usage = { tokens: 200_000, contextWindow: 272_000, percent: 84 };
     h.batch();
+    h.state.usage = { tokens: 240_000, contextWindow: 272_000, percent: Number.NaN };
+    h.batch();
     h.state.usage = { tokens: 240_000, contextWindow: 272_000, percent: 88 };
     h.batch(batch.slice(0, 1));
     assert.equal(h.state.compacts.length, 0);

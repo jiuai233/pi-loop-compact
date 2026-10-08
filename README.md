@@ -2,7 +2,7 @@
 
 **Compact Pi's context between tool batches of a long run, skip compactions that cannot help, and resume the task afterwards.**
 
-[Install](#install) · [Commands](#commands) · [Configuration](#configuration) · [简体中文](README.zh-CN.md)
+[npm](https://www.npmjs.com/package/pi-loop-compact) · [Install](#install) · [Commands](#commands) · [Configuration](#configuration) · [简体中文](README.zh-CN.md)
 
 - **Compaction between tool batches:** Pi's own threshold compaction waits for the run to end, so a run with dozens of tool calls can fill the context first. This extension checks usage after every complete tool batch and compacts at the threshold.
 - **Check before interrupting:** Pi's compaction aborts the current request first. The extension predicts Pi's cut point and skips, with an explanation, when Pi has nothing to summarize or when the tail Pi must keep is already above the threshold on its own. The task keeps running.
@@ -15,10 +15,10 @@ Compaction itself stays with Pi: the cut point, summary format and compaction mo
 Requires Node.js 24+ and Pi 1.1.0+.
 
 ```bash
-pi install git:github.com/jiuai233/pi-loop-compact
+pi install npm:pi-loop-compact
 ```
 
-Run `/reload` in Pi. Automatic compaction is on by default at 85%. Disable other mid-run compaction extensions such as `pi-midrun-compact` to avoid double triggers.
+Run `/reload` in Pi. GitHub works too: `pi install git:github.com/jiuai233/pi-loop-compact`; use one source, not both. Automatic compaction is on by default at 85%. Disable other mid-run compaction extensions such as `pi-midrun-compact` to avoid double triggers.
 
 ## Commands
 

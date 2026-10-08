@@ -2,7 +2,7 @@
 
 **在 Pi 长任务的工具循环中途压缩上下文，压不下去的情况提前跳过，压完自动续跑。**
 
-[安装](#安装) · [命令](#命令) · [配置](#配置) · [English](README.md)
+[npm](https://www.npmjs.com/package/pi-loop-compact) · [安装](#安装) · [命令](#命令) · [配置](#配置) · [English](README.md)
 
 - **工具批次之间压缩**：Pi 自带的阈值压缩要等一轮任务结束；一轮里连续几十次工具调用时，上下文可能先顶满。本扩展在每批工具结果收齐后检查用量，到阈值就压缩。
 - **先判断再动手**：Pi 的压缩会先中断当前请求。扩展按 Pi 的切点规则预判，Pi 无内容可压、或必须原样保留的最后一块本身就超过阈值时，直接跳过并说明原因，任务不受影响。
@@ -15,10 +15,10 @@
 依赖 Node.js 24+、Pi 1.1.0+。
 
 ```bash
-pi install git:github.com/jiuai233/pi-loop-compact
+pi install npm:pi-loop-compact
 ```
 
-装好后在 Pi 中运行 `/reload`。默认开启，阈值 85%。其他中途压缩扩展（如 `pi-midrun-compact`）应停用，避免重复触发。
+装好后在 Pi 中运行 `/reload`。也可通过 GitHub 安装：`pi install git:github.com/jiuai233/pi-loop-compact`，两种来源选一种即可。默认开启，阈值 85%。其他中途压缩扩展（如 `pi-midrun-compact`）应停用，避免重复触发。
 
 ## 命令
 
