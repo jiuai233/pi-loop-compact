@@ -1,0 +1,58 @@
+{
+  "name": "pi-loop-compact",
+  "version": "0.1.0",
+  "description": "Compact Pi context between tool batches of a long run, skip compactions that cannot help, and resume the interrupted task",
+  "type": "module",
+  "license": "MIT",
+  "author": "jiuai233",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jiuai233/pi-loop-compact.git"
+  },
+  "homepage": "https://github.com/jiuai233/pi-loop-compact#readme",
+  "bugs": {
+    "url": "https://github.com/jiuai233/pi-loop-compact/issues"
+  },
+  "keywords": [
+    "pi-package",
+    "pi-extension",
+    "compaction",
+    "context-window",
+    "tool-loop",
+    "pi-coding-agent"
+  ],
+  "files": [
+    "src/",
+    "README.md",
+    "README.zh-CN.md",
+    "LICENSE"
+  ],
+  "pi": {
+    "extensions": [
+      "./src/index.ts"
+    ]
+  },
+  "scripts": {
+    "test": "node --test --test-concurrency=1 test/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "check": "npm run typecheck && npm test"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": ">=1.1.0"
+  },
+  "peerDependenciesMeta": {
+    "@earendil-works/pi-coding-agent": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@earendil-works/pi-ai": "1.1.0",
+    "@earendil-works/pi-coding-agent": "1.1.0",
+    "@types/node": "^24.19.1",
+    "typebox": "1.3.27",
+    "typescript": "^7.0.2"
+  }
+}
