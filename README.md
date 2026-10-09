@@ -1,14 +1,22 @@
 # pi-loop-compact
 
-**Compact Pi's context between tool batches of a long run, skip compactions that cannot help, and resume the task afterwards.**
+**Automatically compact Pi's context during long-running tasks and resume the work afterwards.**
 
 [npm](https://www.npmjs.com/package/pi-loop-compact) · [Install](#install) · [Commands](#commands) · [Configuration](#configuration) · [简体中文](README.zh-CN.md)
 
-- **Compaction between tool batches:** Pi's own threshold compaction waits for the run to end, so a run with dozens of tool calls can fill the context first. This extension checks usage after every complete tool batch and compacts at the threshold.
-- **Check before interrupting:** Pi's compaction aborts the current request first. The extension predicts Pi's cut point and skips, with an explanation, when Pi has nothing to summarize or when the tail Pi must keep is already above the threshold on its own. The task keeps running.
-- **Resume afterwards:** if the task was running, a continuation message follows the compaction, unless you already sent input during it.
+## Why use this extension?
 
-Compaction itself stays with Pi: the cut point, summary format and compaction model (for example `pi-compaction-model`) are unchanged.
+A complex Pi task can involve repeated file reads, code searches and shell commands. Each tool result adds to the context. Pi 1.1.0 checks its built-in compaction threshold after a run ends or before a new prompt; a long sequence of tool calls can exhaust the context before that run finishes.
+
+`pi-loop-compact` checks context usage between tool calls. At the threshold, it uses Pi's compaction to summarize earlier conversation, then resumes the current task. It is useful for code changes, investigations and research that require many consecutive tool calls, reducing interruptions caused by context exhaustion.
+
+## How it works
+
+- **Compact during the run:** check usage after each complete tool batch and compact at 85% by default, without waiting for the run to end.
+- **Resume automatically:** by default, resume the task interrupted by compaction. If new input arrives during compaction, that input takes over without an extra continuation message.
+- **Check before compacting:** skip automatic compaction with an explanation when there is nothing to summarize or the recent content Pi must retain already exceeds the threshold. The current task keeps running.
+
+Compaction stays with Pi, using its cut-point rules, summary format and compaction model (for example `pi-compaction-model`).
 
 ## Install
 
