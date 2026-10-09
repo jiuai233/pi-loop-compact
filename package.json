@@ -1,7 +1,7 @@
 {
   "name": "pi-loop-compact",
   "version": "0.1.0",
-  "description": "Compact Pi context between tool batches of a long run, skip compactions that cannot help, and resume the interrupted task",
+  "description": "Automatically compact context between Pi tool calls and resume long-running tasks",
   "type": "module",
   "license": "MIT",
   "author": "jiuai233",
