@@ -42,13 +42,14 @@ function harness(config?: object) {
     sent: [] as unknown[],
     notes: [] as Array<{ message: string; type: string }>,
     aborts: 0,
+    status: undefined as string | undefined,
   };
   const ctx = {
     cwd: dir,
     model: { provider: "openai-codex", id: "gpt-6.1-sol", contextWindow: 272_000 },
     ui: {
       theme: { fg: (_color: string, value: string) => value },
-      setStatus() {},
+      setStatus(_key: string, value: string | undefined) { state.status = value; },
       notify(message: string, type: string) { state.notes.push({ message, type }); },
     },
     sessionManager: {
@@ -165,14 +166,22 @@ test("an uncompactable session is skipped without aborting, announced once per c
   }
 });
 
-test("a failed compaction resumes uncompacted and is not retried at the same cut point", async () => {
+test("a failed compaction stops without a continuation and is not retried at the same cut point", async () => {
   const h = harness();
   try {
     h.batch();
     await h.state.compacts[0].onError!(new Error("HTTP 400"));
     await h.tick();
-    assert.match(h.state.notes.at(-1)!.message, /压缩失败：HTTP 400，任务不压缩继续/);
-    assert.deepEqual(h.state.sent, [CONTINUE_PROMPT]);
+    assert.equal(h.state.notes.at(-1)!.message, "loop-compact：压缩失败：HTTP 400，已停止自动续跑");
+    assert.equal(h.state.notes.at(-1)!.type, "error");
+    assert.deepEqual(h.state.sent, []);
+    assert.equal(h.state.status, undefined);
+
+    await h.state.compacts[0].onComplete!({} as never);
+    await h.tick();
+    assert.deepEqual(h.state.sent, [], "a late completion cannot resume a failed compaction");
+    await h.run("status");
+    assert.match(h.state.notes.at(-1)!.message, /状态：idle[\s\S]*最近提示：压缩失败：HTTP 400/);
 
     h.batch();
     assert.equal(h.state.compacts.length, 1);
@@ -182,6 +191,24 @@ test("a failed compaction resumes uncompacted and is not retried at the same cut
     assert.equal(h.state.compacts.length, 2, "a new cut point is tried again");
   } finally {
     h.cleanup();
+  }
+});
+
+test("a synchronous compaction error stops both automatic and manual continuations", async () => {
+  for (const manual of [false, true]) {
+    const h = harness();
+    try {
+      h.state.idle = false;
+      h.ctx.compact = () => { throw new Error("Compaction cancelled"); };
+      if (manual) await h.run("now");
+      else h.batch();
+      await h.tick();
+      assert.equal(h.state.notes.at(-1)!.message, "loop-compact：压缩失败：Compaction cancelled，已停止自动续跑");
+      assert.deepEqual(h.state.sent, []);
+      assert.equal(h.state.status, undefined);
+    } finally {
+      h.cleanup();
+    }
   }
 });
 

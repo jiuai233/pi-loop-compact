@@ -1,6 +1,6 @@
 {
   "name": "pi-loop-compact",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Automatically compact context between Pi tool calls and resume long-running tasks",
   "type": "module",
   "license": "MIT",

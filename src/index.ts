@@ -67,9 +67,9 @@ export default function loopCompact(pi: ExtensionAPI): void {
         // Another automatic attempt at the same cut point would fail the same way.
         if (cutKey) handledCuts.add(cutKey);
         lastNote = `压缩失败：${error.message}`;
-        ctx.ui.notify(`loop-compact：${lastNote}${resume && settings.resume ? "，任务不压缩继续" : ""}`, "error");
+        ctx.ui.notify(`loop-compact：${lastNote}，已停止自动续跑`, "error");
       }
-      if (!resume || !settings.resume) {
+      if (error || !resume || !settings.resume) {
         phase = "idle";
         ctx.ui.setStatus(STATUS_KEY, undefined);
         return;

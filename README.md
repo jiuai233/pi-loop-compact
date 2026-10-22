@@ -65,7 +65,7 @@ Pi cuts only before user or assistant messages, keeps the most recent `keepRecen
 
 The extension skips both, reports each cut point once, and lets the task continue. Once enough new content moves the cut point, it tries again. If the context really overflows, Pi's own overflow recovery still applies; a new session, or saving large inputs to disk for the model to read selectively, works better.
 
-When compaction fails (for example, the compaction model request errors), the extension reports it, sends the continuation so the task proceeds uncompacted, and does not retry automatically at the same cut point.
+When compaction fails (for example, the compaction model request errors), the extension shows the original error, stops automatic continuation, and does not retry automatically at the same cut point. `/loop-compact status` shows the latest error; `/loop-compact now` retries manually.
 
 ## Development
 
